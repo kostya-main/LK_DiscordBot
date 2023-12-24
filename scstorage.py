@@ -40,29 +40,30 @@ def checkcape(caperaw):
 app = FastAPI(docs_url=None, redoc_url=None)
 class scstorage:
 
-    async def saveprofile(self, nickname, skinUrl):
+    async def saveprofile(nickname, skinUrl):
         from main import db
         uuid=db.check_uuid(nickname)[0]["uuid"]
         async with aiohttp.ClientSession() as session:
             async with session.get(skinUrl) as resp:
                 if checkskin(await resp.read()):
-                    with open(f'{self.skindir}/{uuid}.png', 'wb') as file:
+                    
+                    with open(f'{config.web.skindir}/{uuid}.png', 'wb') as file:
                         file.write(await resp.read())
-                    with open(f'{self.avatardir}/{uuid}.png', 'wb') as file:
-                        s = minepi.Skin(raw_skin=Image.open(f'{self.skindir}/{uuid}.png'))
+                    with open(f'{config.web.avatardir}/{uuid}.png', 'wb') as file:
+                        s = minepi.Skin(raw_skin=Image.open(f'{config.web.skindir}/{uuid}.png'))
                         await s.render_head(vr=0, hr=0)
                         s.head.save(file)
                     return True
                 else:
                     return False
 
-    async def savecape(self, nickname, capeUrl):
+    async def savecape(nickname, capeUrl):
         from main import db
         uuid=db.check_uuid(nickname)[0]["uuid"]
         async with aiohttp.ClientSession() as session:
             async with session.get(capeUrl) as resp:
                 if checkcape(await resp.read()):
-                    with open(f'{self.capedir}/{uuid}.png', 'wb') as file:
+                    with open(f'{config.web.capedir}/{uuid}.png', 'wb') as file:
                         file.write(await resp.read())
                     return True
                 else:

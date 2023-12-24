@@ -1,7 +1,7 @@
 import discord
 from discord.ext import commands
 import signal
-import os
+import aiofiles.os
 import sys
 import multiprocessing
 from dynaconf import Dynaconf
@@ -19,8 +19,8 @@ db = dbmanager.dbm(config.db.login, config.db.password, config.db.host, config.d
 async def on_ready():
     try:
         #Загрузка папки cogs
-        for dir_cogs in os.listdir('./cogs'):
-            for filename in os.listdir(f'./cogs/{dir_cogs}'):
+        for dir_cogs in await aiofiles.os.listdir('./cogs'):
+            for filename in await aiofiles.os.listdir(f'./cogs/{dir_cogs}'):
                 if filename.endswith('.py'):
                     await client.load_extension(f'cogs.{dir_cogs}.{filename[:-3]}')
                 else:
@@ -29,6 +29,9 @@ async def on_ready():
         #for ext in cogs:
         #    await client.load_extension(ext)
         #client.tree.clear_commands(guild=None)
+        for Directory in [config.web.skindir, config.web.capedir, config.web.avatardir]:
+            if not await aiofiles.os.path.exists(Directory):
+                await aiofiles.os.mkdir(Directory)
         print(f"Команд найдено {len(await client.tree.sync())}")
     except Exception as ex:
         print(ex)
