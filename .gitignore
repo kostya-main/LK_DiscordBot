@@ -1,0 +1,12 @@
+/cogs/commands/test.py
+/cogs/commands/__pycache__
+/cogs/event/__pycache__
+/cogs/tasks/__pycache__
+/__pycache__
+/temp.txt
+/cogs/tasks/command_reloot.py.old
+/avatar
+/capes
+/skins
+# Ignore dynaconf secret files
+.secrets.*
