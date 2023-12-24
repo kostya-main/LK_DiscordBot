@@ -7,7 +7,6 @@ import minepi
 import aiohttp
 import uvicorn
 import hashlib
-import base64
 import aiofiles.os
 import time
 import io
@@ -38,7 +37,7 @@ def checkcape(caperaw):
     return (w % 64 == 0 and h % 32 == 0) and (w <= 512 and h <= 512)
 
 
-app = FastAPI(docs_url=None, redoc_url=None)
+app = FastAPI(docs_url='/docs', redoc_url=None)
 class scstorage:
 
     async def saveprofile(self, nickname, skinUrl):
@@ -71,89 +70,81 @@ class scstorage:
 
 
 
-
-    def __init__(self):
-        self.skindir = config.web.skindir
-        self.capedir = config.web.capedir
-        self.avatardir = config.web.avatardir
-        self.host = config.web.host
-        self.port = config.web.port
+    
+    class Reqest_pay(BaseModel):
+        type:str
+        event:str
+        object:dict
+    #@app.middleware('http')
+    #async def measure_time(request: Request, call_next):
+    #    start = time.time()
+    #    response = await call_next(request)
+    #    end = time.time()
+    #    res = end-start
+    #    print(res)
+    #    return response
+    
+    @app.post('/post/pay_check')
+    async def post(response:Response, reqest:Reqest_pay):
+        from cogs.event.check_pay import Check_pay
+        if reqest.event == 'payment.succeeded':
+            await Check_pay.check_pay(True, reqest.object['id'], int(float(reqest.object['amount']['value'])))
+        else:
+            await Check_pay.check_pay(False, reqest.object['id'], int(float(reqest.object['amount']['value'])))
+        response = status.HTTP_200_OK
+        return response
+    
+    @app.get('/get')
+    async def get(uuid:str):
         url = config.web.url
         za_skin = {'url': None, 'digest': None, 'metadata': {'model': None}}
         za_cape = {'url': None, 'digest': None}
-
-        class Reqest_pay(BaseModel):
-            type:str
-            event:str
-            object:dict
-
-
-        #@app.middleware('http')
-        #async def measure_time(request: Request, call_next):
-        #    start = time.time()
-        #    response = await call_next(request)
-        #    end = time.time()
-        #    res = end-start
-        #    print(res)
-        #    return response
+        linkSkin = f'{config.web.skindir}/{uuid}.png'
+        linkCape = f'{config.web.capedir}/{uuid}.png'
+        za_skin['url'] = f'{url}/storage/skin?uuid={uuid}'
+        za_cape['url'] = f'{url}/storage/cape?uuid={uuid}'
+        if await aiofiles.os.path.exists(linkSkin):
+            za_skin['digest'] = hashlib.sha256(open(linkSkin, 'rb').read()).hexdigest()
+            slim = checkslim(BytesIO(open(linkSkin, 'rb').read()))
+            za_skin['metadata']['model'] = 'slim' if slim else 'classic'
+        else:
+            za_skin['digest'] = hashlib.sha256(open(config.web.defaultSkin, 'rb').read()).hexdigest()
+            slim = checkslim(BytesIO(open(config.web.defaultSkin, 'rb').read()))
+            za_skin['metadata']['model'] = 'slim' if slim else 'classic'
+        if await aiofiles.os.path.exists(linkCape):
+            za_cape['digest'] = hashlib.sha256(open(linkCape, 'rb').read()).hexdigest()
+        else:
+            za_cape['digest'] = hashlib.sha256(open(config.web.defaultCape, 'rb').read()).hexdigest()
+        return {'SKIN':za_skin, 'CAPE':za_cape}
+    
+    @app.get('/storage/skin')
+    async def storage(uuid:str):
+        link = f'{config.web.skindir}/{uuid}.png'
+        if await aiofiles.os.path.exists(link):
+            return FileResponse(link)
+        else:
+            return FileResponse(config.web.defaultSkin)
         
-        @app.post('/post/pay_check')
-        async def post(response:Response, reqest:Reqest_pay):
-            from cogs.event.check_pay import Check_pay
-            if reqest.event == 'payment.succeeded':
-                await Check_pay.check_pay(True, reqest.object['id'], int(float(reqest.object['amount']['value'])))
-            else:
-                await Check_pay.check_pay(False, reqest.object['id'], int(float(reqest.object['amount']['value'])))
-            response = status.HTTP_200_OK
-            return response
+    @app.get('/storage/cape')
+    async def storage(uuid:str):
+        link = f'{config.web.capedir}/{uuid}.png'
+        if await aiofiles.os.path.exists(link):
+            return FileResponse(link)
+        else:
+            return FileResponse(config.web.defaultCape)
         
-        @app.get('/get')
-        async def get(uuid:str):
-            linkSkin = f'{self.skindir}/{uuid}.png'
-            linkCape = f'{self.capedir}/{uuid}.png'
-            za_skin['url'] = f'{url}/storage/skin?uuid={uuid}'
-            za_cape['url'] = f'{url}/storage/cape?uuid={uuid}'
-            if await aiofiles.os.path.exists(linkSkin):
-                za_skin['digest'] = base64.encodebytes(hashlib.md5(open(linkSkin, 'rb').read()).hexdigest().encode()).decode().replace('\n', '')
-                slim = checkslim(BytesIO(open(linkSkin, 'rb').read()))
-                za_skin['metadata']['model'] = 'slim' if slim else 'classic'
-            else:
-                za_skin['digest'] = base64.encodebytes(hashlib.md5(open(config.web.defaultSkin, 'rb').read()).hexdigest().encode()).decode().replace('\n', '')
-                slim = checkslim(BytesIO(open(config.web.defaultSkin, 'rb').read()))
-                za_skin['metadata']['model'] = 'slim' if slim else 'classic'
-            if await aiofiles.os.path.exists(linkCape):
-                za_cape['digest'] = base64.encodebytes(hashlib.md5(open(linkCape, 'rb').read()).hexdigest().encode()).decode().replace('\n', '')
-            else:
-                za_cape['digest'] = base64.encodebytes(hashlib.md5(open(config.web.defaultCape, 'rb').read()).hexdigest().encode()).decode().replace('\n', '')
-            return {'SKIN':za_skin, 'CAPE':za_cape}
-
-        @app.get('/storage/skin')
-        async def storage(uuid:str):
-            link = f'{self.skindir}/{uuid}.png'
-            if await aiofiles.os.path.exists(link):
-                return FileResponse(link)
-            else:
-                return FileResponse(config.web.defaultSkin)
-        @app.get('/storage/cape')
-        async def storage(uuid:str):
-            link = f'{self.capedir}/{uuid}.png'
-            if await aiofiles.os.path.exists(link):
-                return FileResponse(link)
-            else:
-                return FileResponse(config.web.defaultCape)
-
-        @app.get('/storage/avatar')
-        async def storage(uuid:str):
-            link = f'{self.avatardir}/{uuid}.png'
-            if await aiofiles.os.path.exists(link):
-                return FileResponse(link)
-            else:
-                return FileResponse(config.web.defaultAvatar)
-
-        @app.head('/storage/skin')
-        async def head(nickname:str, response:Response):
-            response = status.HTTP_200_OK
-            return response
+    @app.get('/storage/avatar')
+    async def storage(uuid:str):
+        link = f'{config.web.avatardir}/{uuid}.png'
+        if await aiofiles.os.path.exists(link):
+            return FileResponse(link)
+        else:
+            return FileResponse(config.web.defaultAvatar)
+        
+    @app.head('/storage/skin')
+    async def head(nickname:str, response:Response):
+        response = status.HTTP_200_OK
+        return response
 
 
 
