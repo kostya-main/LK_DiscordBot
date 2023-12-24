@@ -37,7 +37,7 @@ def checkcape(caperaw):
     return (w % 64 == 0 and h % 32 == 0) and (w <= 512 and h <= 512)
 
 
-app = FastAPI(docs_url='/docs', redoc_url=None)
+app = FastAPI(docs_url=None, redoc_url=None)
 class scstorage:
 
     async def saveprofile(self, nickname, skinUrl):
@@ -151,4 +151,4 @@ class scstorage:
 
 
     def server():
-        uvicorn.run("scstorage:app", port=config.web.port, host=config.web.host, log_level="info", workers=1)
+        uvicorn.run("scstorage:app", port=config.web.port, host=config.web.host, log_level="info", workers=3)
