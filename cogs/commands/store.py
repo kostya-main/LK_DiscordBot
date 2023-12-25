@@ -35,8 +35,8 @@ class Store(commands.Cog):
             super().__init__(timeout=None)
             self.client = client
 
-        @discord.ui.button(label="Подписка", style=discord.ButtonStyle.green, custom_id="lot1", emoji="📜")
-        async def lot1(self, interaction: discord.Interaction, button: discord.ui.Button):
+        @discord.ui.button(label="Подписка", style=discord.ButtonStyle.green, custom_id="rule", emoji="📜")
+        async def rule(self, interaction: discord.Interaction, button: discord.ui.Button):
             embedVar = discord.Embed(title="Условия приобретения подписки.", description='>>> Я, нижеподписавшийся (далее «Пользователь»), подтверждаю свое согласие с условиями подписки (далее «Подписка»).\n \n Я понимаю и соглашаюсь с тем, что при покупке Подписки я получаю доступ к определенным услугам, продуктам или функциям, которые могут быть изменены или прекращены по решению администрации сервера.\n \n Я понимаю, что цена Подписки может изменяться по решению администрации сервера и что предоставление доступа к услугам, продуктам или функциям может быть прекращено в любое время по решению администрации сервера. \n \n Я понимаю и соглашаюсь с тем, что Подписка не может быть прекращена до истечения текущего периода оплаты. \n \n Я понимаю и соглашаюсь с тем, что все платежи за Подписку не возвращаются.\n \n Я понимаю и соглашаюсь с тем, что все права и обязанности, определенные в этом соглашении, могут быть изменены по решению администрации сервера. \n \n Я понимаю и соглашаюсь с тем, что при покупке Подписки я принимаю настоящее пользовательское соглашение и принимаю все условия и положения, изложенные в настоящем соглашении.', color=0xf44336)
             embedVar.add_field(name="Укажите что согласны с условиями приобретения", value="", inline=False)
             await interaction.response.edit_message(embed=embedVar, view=Store.ButtonView(client=self.client))
@@ -65,16 +65,15 @@ class Store(commands.Cog):
         async def pay(self, interaction: discord.Interaction, button: discord.ui.Button):
             if db.connect():
                 try:
-                    c = db.check_money(interaction.user.id)
+                    coin = db.check_money(interaction.user.id)
                     guild = discord.utils.get(self.client.guilds, id = config.bot.guild)
                     member = guild.get_member(interaction.user.id)
-                    role = member.roles
-                    for list_role in role:
+                    for list_role in member.roles:
                         if list_role.id == shop.trealRole:
                             embedVar = discord.Embed(title="Вы уже приобрели данную привелегию.", description="Ознакомьтесь с другими возможностями.", color=0xf44336)
                             await interaction.response.edit_message(embed=embedVar)
                             return
-                    if c[1]['money'] >= 100:
+                    if coin[1]['money'] >= 100:
                         # разбанить на сервере
                         user = db.getUsernameByDiscordID(interaction.user.id)[1]['username']
                         try:
@@ -104,8 +103,8 @@ class Store(commands.Cog):
                 finally:
                     db.close()
 
-        @discord.ui.button(label='Назад', style=discord.ButtonStyle.red, custom_id='cansel', emoji='⏪')
-        async def cansel(self, interaction: discord.Interaction, button: discord.ui.Button):
+        @discord.ui.button(label='Назад', style=discord.ButtonStyle.red, custom_id='cancel', emoji='⏪')
+        async def cancel(self, interaction: discord.Interaction, button: discord.ui.Button):
             embedVar = discord.Embed(title="Магазин", description="Здесь ты можешь приобрести различные привилегии.", color=config.bot.embedColor)
             embedVar.add_field(name="Подписка 📜", value="Приобретение доступа к серверу.", inline=False)
             await interaction.response.edit_message(embed=embedVar, view=Store.Rules(client=self.client))

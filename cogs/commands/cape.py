@@ -26,15 +26,13 @@ class Cape(commands.Cog):
                         username = r_getUser[1]['username']
                         if await scstorage.savecape(username, file.url):
                             uuid=db.check_uuid(username)[0]["uuid"]
-                            skinDir = config.web.skindir
-                            caprDir = config.web.capedir
-                            if await aiofiles.os.path.exists(f'{skinDir}/{uuid}.png'):
-                                raw_skin = Image.open(f'{skinDir}/{uuid}.png')
+                            if await aiofiles.os.path.exists(f'{config.web.skindir}/{uuid}.png'):
+                                raw_skin = Image.open(f'{config.web.skindir}/{uuid}.png')
                             else:
                                 raw_skin = Image.open(config.web.defaultSkin)
                             embedVar = discord.Embed(title="Успешно!", description="Ваш плащ стал таким.", color=0x00ff09)
                             #Создание 3D модели
-                            s = minepi.Skin(raw_skin=raw_skin, raw_cape=Image.open(f'{caprDir}/{uuid}.png'))
+                            s = minepi.Skin(raw_skin=raw_skin, raw_cape=Image.open(f'{config.web.capedir}/{uuid}.png'))
                             io = BytesIO()
                             images = await s.render_skin(hr=180, vrc=0)
                             images.save(io, 'PNG')
