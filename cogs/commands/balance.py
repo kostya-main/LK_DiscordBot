@@ -85,7 +85,7 @@ class Balance(commands.Cog):
                             await interaction.response.send_message('**Ошибка:** Неполадки в платёжной системе.')
                     else:
                         print(f"BAD RETURN {interaction.user.name}")
-                        embedVar = discord.Embed(title="Счёт не оплачен", description="Пожалуста, оплатите счёт, выставленный ранее.", color=0xf44336)
+                        embedVar = discord.Embed(title="Счёт не оплачен", description="Пожалуиста, оплатите счёт, выставленный ранее.", color=0xf44336)
                         await interaction.response.send_message(embed=embedVar)
                 except Exception as ex:
                     print(ex)
