@@ -7,7 +7,7 @@ from io import BytesIO
 import aiofiles.os
 
 from main import config, db
-from scstorage import scstorage
+import scstorage
 
 class Cape(commands.Cog):
     def __init__(self, client):

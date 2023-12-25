@@ -45,7 +45,7 @@ def signal_handler(signal, frame):
 
 if __name__ == '__main__':
     signal.signal(signal.SIGINT, signal_handler)
-    from scstorage import scstorage
-    scs_thread = multiprocessing.Process(target=scstorage.server)
+    from scstorage import API
+    scs_thread = multiprocessing.Process(target=API.server)
     scs_thread.start()
     client.run(config.bot.token)

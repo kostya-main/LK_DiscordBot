@@ -7,7 +7,7 @@ from io import BytesIO
 import aiofiles.os
 
 from main import db, config
-from scstorage import scstorage
+import scstorage
 
 class Skin(commands.Cog):
     def __init__(self, client):

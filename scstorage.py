@@ -15,13 +15,13 @@ from main import config
 
 
 
-def checkskin(skinraw):
+async def checkskin(skinraw):
     skin = Image.open(io.BytesIO(skinraw))
     w, h = skin.size
     return (w % 64 == 0 and h % 64 == 0) and (w <= 512 and h <= 512)
 
 
-def checkslim(skinraw):
+async def checkslim(skinraw):
     skin = Image.open(skinraw).convert(mode="RGBA")
     w, h = skin.size
     fraction = w / 8
@@ -31,22 +31,18 @@ def checkslim(skinraw):
     return pixel == (0, 0, 0, 0)
 
 
-def checkcape(caperaw):
+async def checkcape(caperaw):
     skin = Image.open(io.BytesIO(caperaw))
     w, h = skin.size
     return (w % 64 == 0 and h % 32 == 0) and (w <= 512 and h <= 512)
 
-
-app = FastAPI(docs_url=None, redoc_url=None)
-class scstorage:
-
-    async def saveprofile(nickname, skinUrl):
+async def saveprofile(nickname, skinUrl):
         from main import db
         uuid=db.check_uuid(nickname)[0]["uuid"]
         async with aiohttp.ClientSession() as session:
             async with session.get(skinUrl) as resp:
-                if checkskin(await resp.read()):
-                    
+
+                if await checkskin(await resp.read()):
                     with open(f'{config.web.skindir}/{uuid}.png', 'wb') as file:
                         file.write(await resp.read())
                     with open(f'{config.web.avatardir}/{uuid}.png', 'wb') as file:
@@ -56,19 +52,24 @@ class scstorage:
                     return True
                 else:
                     return False
-
-    async def savecape(nickname, capeUrl):
+                
+async def savecape(nickname, capeUrl):
         from main import db
         uuid=db.check_uuid(nickname)[0]["uuid"]
         async with aiohttp.ClientSession() as session:
             async with session.get(capeUrl) as resp:
-                if checkcape(await resp.read()):
+
+                if await checkcape(await resp.read()):
                     with open(f'{config.web.capedir}/{uuid}.png', 'wb') as file:
                         file.write(await resp.read())
                     return True
                 else:
                     return False
 
+
+
+app = FastAPI(docs_url=None, redoc_url=None)
+class API:
 
 
     
@@ -85,7 +86,7 @@ class scstorage:
     #    print(res)
     #    return response
     
-    @app.post('/post/pay_check')
+    @app.post('/pay_check')
     async def post(response:Response, reqest:Reqest_pay):
         from cogs.event.check_pay import Check_pay
         if reqest.event == 'payment.succeeded':
@@ -95,23 +96,20 @@ class scstorage:
         response = status.HTTP_200_OK
         return response
     
-    @app.get('/get')
+    @app.get('/storage')
     async def get(uuid:str):
-        url = config.web.url
-        za_skin = {'url': None, 'digest': None, 'metadata': {'model': None}}
-        za_cape = {'url': None, 'digest': None}
+        za_skin = {'url': f'{config.web.url}/storage/skin?uuid={uuid}', 'digest': None, 'metadata': {'model': None}}
+        za_cape = {'url': f'{config.web.url}/storage/cape?uuid={uuid}', 'digest': None}
         linkSkin = f'{config.web.skindir}/{uuid}.png'
         linkCape = f'{config.web.capedir}/{uuid}.png'
-        za_skin['url'] = f'{url}/storage/skin?uuid={uuid}'
-        za_cape['url'] = f'{url}/storage/cape?uuid={uuid}'
+        
         if await aiofiles.os.path.exists(linkSkin):
             za_skin['digest'] = hashlib.sha256(open(linkSkin, 'rb').read()).hexdigest()
-            slim = checkslim(BytesIO(open(linkSkin, 'rb').read()))
-            za_skin['metadata']['model'] = 'slim' if slim else 'classic'
+            za_skin['metadata']['model'] = 'slim' if await checkslim(BytesIO(open(linkSkin, 'rb').read())) else 'classic'
         else:
             za_skin['digest'] = hashlib.sha256(open(config.web.defaultSkin, 'rb').read()).hexdigest()
-            slim = checkslim(BytesIO(open(config.web.defaultSkin, 'rb').read()))
-            za_skin['metadata']['model'] = 'slim' if slim else 'classic'
+            za_skin['metadata']['model'] = 'slim' if await checkslim(BytesIO(open(config.web.defaultSkin, 'rb').read())) else 'classic'
+
         if await aiofiles.os.path.exists(linkCape):
             za_cape['digest'] = hashlib.sha256(open(linkCape, 'rb').read()).hexdigest()
         else:
