@@ -47,11 +47,12 @@ python main.py
 
 В настройках `HTTP-уведомления` должны быть выставлены данные параметры:
 
-![1](https://github.com/kostya-main/LK_DiscordBot/assets/65069020/6baf6cc3-211e-4b91-abf8-27f9618a2aaf)
+![1](https://github.com/kostya-main/LK_DiscordBot/assets/65069020/097c462f-6af0-4363-882f-1fdf000cf49b)
 
 # Конфигурация
 
 Все настройки бота размещены в папке `conf`.  
 - `settings.yaml` - Основная настройка бота. **Обязательно посмотрите его!!!!!!**
 - `shop.yaml` - Настройка магазина. По умолчанию выключен.
+
 
