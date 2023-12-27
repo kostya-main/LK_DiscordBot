@@ -10,79 +10,48 @@
 
 # Установка
 
-Для работы бота понадобится: `Python` не новее 3.11, `Mariadb` версии 10.11, `Nginx`, `GravitLauncher` не старее 5.5.  
+Для работы бота понадобится: `Python` не новее 3.11, `Mariadb` версии 10.11, `Nginx`(не обязательный но желательный), `GravitLauncher` не старее 5.5.  
 
-Установка зависимостей Python: (В директории с ботом)
+## Установка зависимостей Python: (В директории с ботом)
 
 ```
 pip install -r requirements.txt
 ```
 
-Запуск бота:  
+## Запуск бота:  
 
 ```
 python main.py
 ```
 
-Конфигурация Nginx:
+## База данных
+
+Все нужные для работы таблицы описанные в файле [bdCreate.sql](https://github.com/kostya-main/LK_DiscordBot/blob/main/bdCreate.sql) (Включая и те которые нужны GravitLauncher)
+
+## Настройка Nginx:
+
+Конфигурация вашего домена описана в файле [nginx.conf](https://github.com/kostya-main/LK_DiscordBot/blob/main/nginx.conf)
+
+## Настройка GravitLauncher
+
+Способ авторизации `mysql` с включённым `enableHardwareFeature`. Нуждается только настройка `textureProvider`.
 
 ```
-upstream gravitlauncher {
-    server 127.0.0.1:9274;
-}
-map $http_upgrade $connection_upgrade {
-    default upgrade;
-    ''      close;
-}
-server {
-    listen 443 ssl http2;
-    server_name api.ВАШ ДОМЕН.ru;
-    charset utf-8;
-    #access_log  /var/log/nginx/launcher.access.log main;
-    #error_log  /var/log/nginx/launcher.error.log notice;
-    keepalive_timeout   70;    
-    root /ПУТЬ/ДО/updates;
-
-    
-    ssl_certificate /etc/nginx/ssl/sertificat.pem;
-    ssl_certificate_key /etc/nginx/ssl/cert.key;
-    ssl_client_certificate /etc/nginx/ssl/test.pem;
-    ssl_verify_client on;
-    
-    location / {
-    }
-    location /api {
-        proxy_pass http://gravitlauncher;
-        proxy_http_version 1.1;
-        real_ip_header X-Forwarded-For;
-        proxy_set_header Upgrade $http_upgrade;
-        proxy_set_header Connection $connection_upgrade;
-        proxy_set_header X-Real-IP $remote_addr;
-        proxy_set_header X-Forwarded-Proto $scheme;
-        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-    }
-    location /skinapi/ {
-        proxy_pass http://127.0.0.1:8123/;
-        proxy_http_version 1.1;
-        real_ip_header X-Forwarded-For;
-        proxy_set_header Host $host;
-        proxy_set_header X-Real-IP $remote_addr;
-        proxy_set_header X-Forwarded-Proto $scheme;
-        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-    }
-    location /skinapi/pay_check {
-        allow 185.71.76.0/27;
-        allow 185.71.77.0/27;
-        allow 77.75.153.0/25;
-        allow 77.75.156.11;
-        allow 77.75.156.35;
-        allow 77.75.154.128/25;
-        allow 2a02:5180::/32;
-        deny all;
-    }
-    location ~ /\.(?!well-known).* {
-        deny all;
-    }
-}
-
+"textureProvider": {
+        "url": "https://api.ВАШ_ДОМЕН.ru/storage?uuid=%uuid%",
+        "type": "json"
+      }
 ```
+
+## Настройка ЮKassa
+
+В настройках `HTTP-уведомления` должны быть выставлены данные параметры:
+
+![1](https://github.com/kostya-main/LK_DiscordBot/assets/65069020/6baf6cc3-211e-4b91-abf8-27f9618a2aaf)
+
+# Конфигурация
+
+Все настройки бота размещены в папке `conf`.  
+- `settings.yaml` - Основная настройка бота. **Обязательно посмотрите его!!!!!!**
+- `shop.yaml` - Настройка магазина. По умолчанию выключен.
+

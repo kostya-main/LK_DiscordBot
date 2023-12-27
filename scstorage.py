@@ -11,7 +11,7 @@ import aiofiles.os
 import time
 import io
 
-from main import config
+from main import config, shop
 
 
 
@@ -89,6 +89,10 @@ class API:
     @app.post('/pay_check')
     async def post(response:Response, reqest:Reqest_pay):
         from cogs.event.check_pay import Check_pay
+        if not shop.enabled:
+            response = status.HTTP_404_NOT_FOUND
+            return response
+        
         if reqest.event == 'payment.succeeded':
             await Check_pay.check_pay(True, reqest.object['id'], int(float(reqest.object['amount']['value'])))
         else:
