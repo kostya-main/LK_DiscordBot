@@ -12,29 +12,29 @@
 
 Для работы бота понадобится: `Python` не новее 3.11, `Mariadb` версии 10.11, `Nginx`(не обязательный но желательный), `GravitLauncher` не старее 5.5.  
 
-## Установка зависимостей Python: (В директории с ботом)
+### Установка зависимостей Python (В директории с ботом)
 
 ```
 pip install -r requirements.txt
 ```
 
-## Запуск бота:  
+### Запуск бота
 
 ```
 python main.py
 ```
 
-## База данных
+### База данных
 
 Все нужные для работы таблицы описанные в файле [bdCreate.sql](https://github.com/kostya-main/LK_DiscordBot/blob/main/bdCreate.sql) (Включая и те которые нужны GravitLauncher)
 
-## Настройка Nginx:
+### Настройка Nginx
 
 Конфигурация вашего домена описана в файле [nginx.conf](https://github.com/kostya-main/LK_DiscordBot/blob/main/nginx.conf)
 
-## Настройка GravitLauncher
+### Настройка GravitLauncher
 
-Способ авторизации `mysql` с включённым `enableHardwareFeature`. Нуждается только настройка `textureProvider`.
+Способ авторизации `mysql` с включённым `enableHardwareFeature`. Нуждается настройка только `textureProvider`.
 
 ```
 "textureProvider": {
@@ -43,7 +43,7 @@ python main.py
       }
 ```
 
-## Настройка ЮKassa
+### Настройка ЮKassa
 
 В настройках `HTTP-уведомления` должны быть выставлены данные параметры:
 
