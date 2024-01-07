@@ -11,6 +11,12 @@
 
 Команды бота подрузомивают что вы будете общаться с ним через личные сообщения, так что не переживайте что вам будут мешать. 
 
+### Примеры оформления
+
+![0](https://github.com/kostya-main/LK_DiscordBot/assets/65069020/9138f1f2-8e32-4f47-b773-bccb0a514255)
+![2](https://github.com/kostya-main/LK_DiscordBot/assets/65069020/4c4835c0-6cdb-4f04-a721-46a5c59b2c3f)
+![3](https://github.com/kostya-main/LK_DiscordBot/assets/65069020/87127d74-b823-43dd-b442-ee35738af844)
+
 # Установка
 
 Для работы бота понадобится: `Python` не новее 3.11, `Mariadb` версии 10.11, `Nginx`(не обязательный но желательный), `GravitLauncher` не старее 5.5.  
