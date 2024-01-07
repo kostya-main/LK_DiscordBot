@@ -26,8 +26,6 @@ async def on_ready():
                 else:
                     print(f'Не является Cogs {filename}')
         #Удаление всех команд из подсказок в Discord
-        #for ext in cogs:
-        #    await client.load_extension(ext)
         #client.tree.clear_commands(guild=None)
         for Directory in [config.web.skindir, config.web.capedir, config.web.avatardir]:
             if not await aiofiles.os.path.exists(Directory):

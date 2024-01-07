@@ -18,7 +18,6 @@ class Store(commands.Cog):
             try:
                 r = db.registered(interaction.user.id)
                 if r[0] and r[1]:
-                    db.unbane(interaction.user.id)
                     embedVar = discord.Embed(title="Магазин", description="Здесь ты можешь приобрести различные привелегии.", color=config.bot.embedColor)
                     embedVar.add_field(name="Подписка 📜", value="Приобретение доступа к серверу.", inline=False)
                     await interaction.response.send_message(embed=embedVar, view=Store.Rules(client=self.client))
@@ -78,13 +77,11 @@ class Store(commands.Cog):
                         user = db.getUsernameByDiscordID(interaction.user.id)[1]['username']
                         try:
                             async with Client(config.rcon.host, config.rcon.port, config.rcon.password) as client:
-                                response = await client.send_cmd(f'lp user {user} parent add subrcriber', 20)
-                                print(response)
                                 response = await client.send_cmd(f'pardon {user}', 20)
                                 print(response)
                         except aiomcrcon.RCONConnectionError:
                             with open('temp.txt', 'a') as file:
-                                file.write(f'error pay vip {user} \n')
+                                file.write(f'error pay subscriber {user} \n')
                         # выдаём роль
                         await member.add_roles(guild.get_role(shop.trealRole))
                         # удалёем рубли и выдаём дату

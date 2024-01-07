@@ -3,6 +3,7 @@ bot:
   prefix: /
   embedColor: 0x8c4bc9
   guild: ID Discord сервера
+  adminRole: ID Роли для выполнение команд администрирования
 db:
   host: localhost
   login: root

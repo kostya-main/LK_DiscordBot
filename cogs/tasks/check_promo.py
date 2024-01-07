@@ -17,7 +17,6 @@ class Check(commands.Cog):
         if db.connect():
             try:
                 #Проверка кого банить
-                print("check")
                 check_data = db.check_date(datetime.date.today())
                 for Did in check_data:
                     #Баним игрока на сервере

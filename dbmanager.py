@@ -204,19 +204,19 @@ class dbm:
             with self.connection.cursor() as cursor:
                 cursor.execute("""select hwidId from `users` where id=%s""", (discordID,))
                 ID = cursor.fetchone()['hwidId']
-                cursor.execute(
-                    """update `hwids` set banned = 0 where id=%s""", (ID,))
+                cursor.execute("""update `hwids` set banned = 0 where id=%s""", (ID,))
                 self.connection.commit()
             return [True]
         except Exception as ex:
             print(ex)
             return [False, getError(ex)]
 
-    def bane(self, discordID, hwidId):
+    def bane(self, discordID):
         try:
             with self.connection.cursor() as cursor:
-                cursor.execute("""update `hwids` set banned = 1 where id=%s""", (hwidId,))
-                cursor.execute("""update `store` set data_trial = NULL where id=%s""", (discordID,))
+                cursor.execute("""select hwidId from `users` where id=%s""", (discordID,))
+                ID = cursor.fetchone()['hwidId']
+                cursor.execute("""update `hwids` set banned = 1 where id=%s""", (ID,))
                 self.connection.commit()
             return [True]
         except Exception as ex:
