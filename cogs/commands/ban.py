@@ -19,18 +19,24 @@ class Ban(commands.Cog):
     @app_commands.command(name="ban", description="Бант игрока по железу")
     @app_commands.describe(ban_user = "Ник Discord пользователя которого нужно забанить")
     async def ban(self, interaction: discord.Integration, ban_user: app_commands.Range[str, 1, None]):
-        if Ban.check_role(self, interaction):
-            if db.connect():
-                guild = discord.utils.get(self.client.guilds, id = config.bot.guild)
-                member = guild.get_member_named(ban_user)
-                if member != None:
-                    db.bane(member.id)
-                    await interaction.response.send_message(f'{ban_user} **успешно забанен по железу.**')
-                else:
-                    await interaction.response.send_message(f'{ban_user} **данный человек не находится на Discord сервере.**')
-        else:
-            embedVar = discord.Embed(title="Недостаточно прав!", description="*У вас не достаточно прав на выполнение данной команды.*", color=0xf44336)
-            await interaction.response.send_message(embed=embedVar)
+        try:
+            if Ban.check_role(self, interaction):
+                if db.connect():
+                    guild = discord.utils.get(self.client.guilds, id = config.bot.guild)
+                    member = guild.get_member_named(ban_user)
+                    if member != None:
+                        db.bane(member.id)
+                        await interaction.response.send_message(f'{ban_user} **успешно забанен по железу.**')
+                    else:
+                        await interaction.response.send_message(f'{ban_user} **данный человек не находится на Discord сервере.**')
+            else:
+                embedVar = discord.Embed(title="Недостаточно прав!", description="*У вас не достаточно прав на выполнение данной команды.*", color=0xf44336)
+                await interaction.response.send_message(embed=embedVar)
+        except Exception as ex:
+            print(ex)
+            await interaction.response.send_message('**Ошибка:** Обратитесь для решения проблемы администратору.')
+        finally:
+            db.close()
                 
 
 
