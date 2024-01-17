@@ -4,6 +4,7 @@ bot:
   embedColor: 0x8c4bc9
   guild: ID Discord сервера
   adminRole: ID Роли для выполнение команд администрирования
+  event_birthday: true #Нужен ли вам функции связанные в датой рождения
 db:
   host: localhost
   login: root
