@@ -1,4 +1,4 @@
--- Создяём таблицу с пользователями
+-- Создаём таблицу с пользователями
 CREATE TABLE `users` (
     `id` CHAR(19) NOT NULL,
     `username` CHAR(30) NOT NULL,
@@ -13,7 +13,7 @@ CREATE TABLE `users` (
     KEY `users_hwidfk` (`hwidId`)
 ) COLLATE='utf8mb4_general_ci' ENGINE=InnoDB;
 
--- Создяём таблицу с информацией пользователей в магазине
+-- Создаём таблицу с информацией пользователей в магазине
 CREATE TABLE `store` (
     `id` CHAR(19) NULL DEFAULT NULL,
     `money` MEDIUMINT(30) NULL DEFAULT '0',
@@ -23,7 +23,7 @@ CREATE TABLE `store` (
     CONSTRAINT `Did` FOREIGN KEY (`id`) REFERENCES `users` (`id`)
 ) COLLATE='utf8mb4_general_ci' ENGINE=InnoDB;
 
--- Создяём таблицу с промокодамии
+-- Создаём таблицу с промокодамии
 CREATE TABLE `promo` (
 	`id` smallint(6) NOT NULL AUTO_INCREMENT,
 	`code` char(50) DEFAULT NULL,
@@ -46,7 +46,7 @@ DELIMITER ;
 -- Генерирует UUID для уже существующих пользователей
 UPDATE users SET uuid=(SELECT UUID()) WHERE uuid IS NULL;
 
--- Создяём таблицу с информацией про железа пользователей
+-- Создаём таблицу с информацией про железа пользователей
 CREATE TABLE `hwids` (
     `id` bigint(20) NOT NULL,
     `publickey` blob,

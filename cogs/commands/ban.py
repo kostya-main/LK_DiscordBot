@@ -18,6 +18,7 @@ class Ban(commands.Cog):
 
     @app_commands.command(name="ban", description="Бант игрока по железу")
     @app_commands.describe(ban_user = "Ник Discord пользователя которого нужно забанить")
+    @app_commands.default_permissions(permissions=0)
     async def ban(self, interaction: discord.Integration, ban_user: app_commands.Range[str, 1, None]):
         try:
             if Ban.check_role(self, interaction):
