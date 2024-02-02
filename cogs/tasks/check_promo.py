@@ -17,17 +17,17 @@ class Check(commands.Cog):
         if db.connect():
             try:
                 #Проверка кого банить
-                check_data = db.check_date(datetime.date.today())
-                for Did in check_data:
+                for Did in db.check_date(datetime.date.today()):
                     #Баним игрока на сервере
                     user = db.getUsernameByDiscordID(Did['id'])[1]['username']
                     try:
                         async with Client(config.rcon.host, config.rcon.port, config.rcon.password) as client:
-                            response = await client.send_cmd(f'ban {user} Ваша подписка истекла. Пожалуйста оплатите её для продолжение игры.')
+                            command = f'ban {user} Ваша подписка истекла. Пожалуйста оплатите её для продолжение игры.'
+                            response = await client.send_cmd(command, 20)
                             print(response)
                     except aiomcrcon.RCONConnectionError:
                         with open('temp.txt', 'a') as file:
-                            file.write(f'error ban {user} \n')
+                            file.write(command)
                     #Удаляем роль
                     guild = discord.utils.get(self.client.guilds, id = config.bot.guild)
                     member = guild.get_member(int(Did['id']))

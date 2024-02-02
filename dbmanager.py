@@ -274,11 +274,16 @@ class dbm:
             print(f'[SQL connector] {ex}')
             return [None]
         
-    def check_banlist(self):
+    def check_banlist(self, page):
         try:
             with self.connection.cursor() as cursor:
+                limit = 10 * page
+                endLimit = limit - 10
+                if page <= 0:
+                    limit = 0
+                    endLimit = 0
                 cursor.execute("""select name, reason, operator, end from `punishments` 
-                    where punishmentType='BAN' OR punishmentType='TEMP_BAN' ORDER BY name LIMIT 20 OFFSET 0""")
+                    where punishmentType='BAN' OR punishmentType='TEMP_BAN' ORDER BY name LIMIT %s OFFSET %s""", (limit, endLimit,))
                 self.connection.commit()
             return cursor.fetchall()
         except Exception as ex:

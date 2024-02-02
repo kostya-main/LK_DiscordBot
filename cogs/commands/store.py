@@ -13,7 +13,7 @@ class Store(commands.Cog):
 
     async def start_message(self, interaction: discord.Integration, wheel: bool):
         embedVar = discord.Embed(title="Магазин", description="Здесь ты можешь приобрести различные привелегии.", color=config.bot.embedColor)
-        embedVar.add_field(name="Подписка 📜", value="Приобретение доступа к серверу.", inline=False)
+        embedVar.add_field(name="В состоянии по умолчанию магазин может не работать.", value="Загляни в файл команды и подправь товары.", inline=False)
         if wheel:
             await interaction.response.edit_message(embed=embedVar, view=Store.Select(client=self.client))
         else:
@@ -49,19 +49,23 @@ class Store(commands.Cog):
         async def callback(self, interaction:discord.Interaction, select: discord.ui.Select):
             if select.values[0] == 'subscription':
                 embedVar = discord.Embed(title="Подписка", description="Проходка на проект!", color=config.bot.embedColor)
-                embedVar.add_field(name="Описание", value="Инфо про роль.", inline=False)
+                embedVar.add_field(name="Описание", value="Инфо про роль.", inline=True)
+                embedVar.add_field(name="Цена", value="100 $", inline=True)
                 await interaction.response.edit_message(embed=embedVar, view=Store.Pay(client=self.client, money=100, type='subscription'))
             elif select.values[0] == 'vip':
                 embedVar = discord.Embed(title="Роль VIP", description="Роль всевластие", color=config.bot.embedColor)
-                embedVar.add_field(name="Описание", value="Инфо про роль.", inline=False)
+                embedVar.add_field(name="Описание", value="Инфо про роль.", inline=True)
+                embedVar.add_field(name="Цена", value="50 $", inline=True)
                 await interaction.response.edit_message(embed=embedVar, view=Store.Pay(client=self.client, money=50, type='game role', arg='vip'))
             elif select.values[0] == 'admin':
                 embedVar = discord.Embed(title="Роль Admin", description="Роль admin discord", color=config.bot.embedColor)
-                embedVar.add_field(name="Описание", value="Инфо про роль.", inline=False)
+                embedVar.add_field(name="Описание", value="Инфо про роль.", inline=True)
+                embedVar.add_field(name="Цена", value="50 $", inline=True)
                 await interaction.response.edit_message(embed=embedVar, view=Store.Pay(client=self.client, money=50, type='discord role', arg=719317524994326649))
             elif select.values[0] == 'item':
                 embedVar = discord.Embed(title="Яйцо Дракона", description="Кто из него вылупится?", color=config.bot.embedColor)
-                embedVar.add_field(name="Описание", value="Инфо про предмет.", inline=False)
+                embedVar.add_field(name="Описание", value="Инфо про предмет.", inline=True)
+                embedVar.add_field(name="Цена", value="20 $", inline=True)
                 await interaction.response.edit_message(embed=embedVar, view=Store.Pay(client=self.client, money=20, type='item', arg='minecraft:dragon_egg'))
     
     class Pay(discord.ui.View):
@@ -93,11 +97,12 @@ class Store(commands.Cog):
                             # разбанить на сервере
                             try:
                                 async with Client(config.rcon.host, config.rcon.port, config.rcon.password) as client:
-                                    response = await client.send_cmd(f'pardon {user}', 20)
+                                    command = f'pardon {user}'
+                                    response = await client.send_cmd(command, 20)
                                     print(response)
                             except aiomcrcon.RCONConnectionError:
                                 with open('temp.txt', 'a') as file:
-                                    file.write(f'error pay subscriber {user} \n')
+                                    file.write(command)
                             # выдаём роль
                             await member.add_roles(guild.get_role(shop.trealRole))
                             # удаляем рубли и выдаём дату
@@ -122,11 +127,12 @@ class Store(commands.Cog):
                             # выдаём роль
                             try:
                                 async with Client(config.rcon.host, config.rcon.port, config.rcon.password) as client:
-                                    response = await client.send_cmd(f'lp user {user} parent set {self.arg}', 20)
+                                    command = f'lp user {user} parent set {self.arg}'
+                                    response = await client.send_cmd(command, 20)
                                     print(response)
                             except aiomcrcon.RCONConnectionError:
                                 with open('temp.txt', 'a') as file:
-                                    file.write(f'error pay game role {user} \n')
+                                    file.write(command)
                             # Вывод
                             db.remove_money(interaction.user.id, self.money)
                             embedVar = discord.Embed(title="Благодарим за поддержку!", description="Мы ценим ваш выбор.", color=0x00ff09)
@@ -163,11 +169,12 @@ class Store(commands.Cog):
                             # выдаём предмет
                             try:
                                 async with Client(config.rcon.host, config.rcon.port, config.rcon.password) as client:
-                                    response = await client.send_cmd(f'give {user} {self.arg}', 20)
+                                    command = f'give {user} {self.arg}'
+                                    response = await client.send_cmd(command, 20)
                                     print(response)
                             except aiomcrcon.RCONConnectionError:
                                 with open('temp.txt', 'a') as file:
-                                    file.write(f'error pay item {user} \n')
+                                    file.write(command)
                             # Вывод
                             db.remove_money(interaction.user.id, self.money)
                             embedVar = discord.Embed(title="Благодарим за поддержку!", description="Мы ценим ваш выбор.", color=0x00ff09)

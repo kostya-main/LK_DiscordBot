@@ -47,11 +47,12 @@ class Reg(commands.Cog):
                             promo_id = r_promo[1]['id']
                             try:
                                 async with Client(config.rcon.host, config.rcon.port, config.rcon.password) as client:
-                                    response = await client.send_cmd(f'scoreboard players set {login} promo {promo_id}')
+                                    command = f'scoreboard players set {login} promo {promo_id}'
+                                    response = await client.send_cmd(command, 20)
                                     print(response)
                             except aiomcrcon.RCONConnectionError:
                                 with open('temp.txt', 'a') as file:
-                                    file.write(f'scoreboard players set {login} promo {promo_id} \n')
+                                    file.write(command)
                             db.add_money(interaction.user.id, 20)
                             db.add_use_promo(promoCode)
                         if r_reg[0]:
