@@ -19,6 +19,9 @@ class Reg(commands.Cog):
 
 
     class Registar(discord.ui.Modal, title="Регистрация нового аккаунта"):
+        def __init__(self):
+            super().__init__(timeout=None)
+            
         login = discord.ui.TextInput(label="Игровой логин",placeholder="Логин", style=discord.TextStyle.short, required=True, min_length=5, max_length=20)
         password = discord.ui.TextInput(label="Уникальный пароль",placeholder="Пароль", style=discord.TextStyle.short, required=True, min_length=5, max_length=20)
         if config.bot.event_birthday==True:
@@ -43,17 +46,16 @@ class Reg(commands.Cog):
                             birthday = None
                         r_reg = db.register(interaction.user.id, login, password, birthday)
                         r_promo = db.check_promo(promoCode)
+                        command = f"scoreboard players set {login} promo {r_promo[1]['id']}"
                         if r_promo[1]['enabled'] == 1:
-                            promo_id = r_promo[1]['id']
                             try:
                                 async with Client(config.rcon.host, config.rcon.port, config.rcon.password) as client:
-                                    command = f'scoreboard players set {login} promo {promo_id}'
-                                    response = await client.send_cmd(command, 20)
+                                    response = await client.send_cmd(command)
                                     print(response)
                             except aiomcrcon.RCONConnectionError:
                                 with open('temp.txt', 'a') as file:
-                                    file.write(command)
-                            db.add_money(interaction.user.id, 20)
+                                    file.write(f'{command} \n')
+                            db.add_money(interaction.user.id, r_promo[1]['value'])
                             db.add_use_promo(promoCode)
                         if r_reg[0]:
                             embedVar = discord.Embed(title="Вы успешно зарегистрированы!", description="Вам предоставлен доступ на пробный период в 7 дней. Этого времени должно хватить, чтобы вы смогли составить мнение о проекте. По истечении срока мы предложим вам оформить подписку за символическую плату 100 рублей/месяц. Доступ по подписке помогает нам обеспечить адекватную аудиторию на сервере и больше времени уделять его развитию. Надеемся на ваше понимание и желаем вам приятной игры!", color=config.bot.embedColor)

@@ -20,14 +20,14 @@ class Check(commands.Cog):
                 for Did in db.check_date(datetime.date.today()):
                     #Баним игрока на сервере
                     user = db.getUsernameByDiscordID(Did['id'])[1]['username']
+                    command = f'ban {user} Ваша подписка истекла. Пожалуйста оплатите её для продолжение игры.'
                     try:
                         async with Client(config.rcon.host, config.rcon.port, config.rcon.password) as client:
-                            command = f'ban {user} Ваша подписка истекла. Пожалуйста оплатите её для продолжение игры.'
-                            response = await client.send_cmd(command, 20)
+                            response = await client.send_cmd(command)
                             print(response)
                     except aiomcrcon.RCONConnectionError:
                         with open('temp.txt', 'a') as file:
-                            file.write(command)
+                            file.write(f'{command} \n')
                     #Удаляем роль
                     guild = discord.utils.get(self.client.guilds, id = config.bot.guild)
                     member = guild.get_member(int(Did['id']))

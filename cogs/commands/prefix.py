@@ -22,14 +22,14 @@ class Prefix(commands.Cog):
                 role = member.roles[-1]
                 if role.id == shop.trealRole:
                     user = db.getUsernameByDiscordID(interaction.user.id)[1]['username']
+                    command = f'lp user {user} meta setprefix {prefix}'
                     try:
                         async with Client(config.rcon.host, config.rcon.port, config.rcon.password) as client:
-                            command = f'lp user {user} meta setprefix {prefix}'
-                            response = await client.send_cmd(command , 20)
+                            response = await client.send_cmd(command)
                             print(response)
                     except aiomcrcon.RCONConnectionError:
                         with open('temp.txt', 'a') as file:
-                            file.write(command)
+                            file.write(f'{command} \n')
                     await interaction.response.send_message('Префикс успешно изменён')
                 else:
                     await interaction.response.send_message('**Ошибка:** Вы не приобрели Подписку. Приобрести её можно в /store')

@@ -28,6 +28,7 @@ CREATE TABLE `promo` (
 	`id` smallint(6) NOT NULL AUTO_INCREMENT,
 	`code` char(50) DEFAULT NULL,
 	`use` smallint(6) NOT NULL DEFAULT 0,
+    `value` smallint(10) NOT NULL,
 	`enabled` tinyint(1) NOT NULL DEFAULT 1,
 	PRIMARY KEY (`id`),
 	UNIQUE KEY `code` (`code`)

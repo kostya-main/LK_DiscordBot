@@ -19,6 +19,7 @@ class Help(commands.Cog):
         embedVar.add_field(name=f"{config.bot.prefix}links", value="Ссылки на игровой клиент", inline=False)
         embedVar.add_field(name=f"{config.bot.prefix}store", value="Донатный магазин", inline=False)
         embedVar.add_field(name=f"{config.bot.prefix}balance", value="Пополнение донатной валюты", inline=False)
+        embedVar.add_field(name=f"{config.bot.prefix}ban-list", value="Список игроков нарушавшие правила", inline=False)
         #embedVar.add_field(name=f"{config.cPREFIX}help", value="Эта справка", inline=False)
         #embedVar.add_field(name="Как пользоваться?", value="Напиши боту в лс", inline=False)
         await interaction.response.send_message(embed=embedVar)

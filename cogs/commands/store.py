@@ -95,14 +95,14 @@ class Store(commands.Cog):
                                 return
                         if coin[1]['money'] >= self.money:
                             # разбанить на сервере
+                            command = f'pardon {user}'
                             try:
                                 async with Client(config.rcon.host, config.rcon.port, config.rcon.password) as client:
-                                    command = f'pardon {user}'
-                                    response = await client.send_cmd(command, 20)
+                                    response = await client.send_cmd(command)
                                     print(response)
                             except aiomcrcon.RCONConnectionError:
                                 with open('temp.txt', 'a') as file:
-                                    file.write(command)
+                                    file.write(f'{command} \n')
                             # выдаём роль
                             await member.add_roles(guild.get_role(shop.trealRole))
                             # удаляем рубли и выдаём дату
@@ -125,14 +125,14 @@ class Store(commands.Cog):
                             return
                         if coin[1]['money'] >= self.money:
                             # выдаём роль
+                            command = f'lp user {user} parent set {self.arg}'
                             try:
                                 async with Client(config.rcon.host, config.rcon.port, config.rcon.password) as client:
-                                    command = f'lp user {user} parent set {self.arg}'
-                                    response = await client.send_cmd(command, 20)
+                                    response = await client.send_cmd(command)
                                     print(response)
                             except aiomcrcon.RCONConnectionError:
                                 with open('temp.txt', 'a') as file:
-                                    file.write(command)
+                                    file.write(f'{command} \n')
                             # Вывод
                             db.remove_money(interaction.user.id, self.money)
                             embedVar = discord.Embed(title="Благодарим за поддержку!", description="Мы ценим ваш выбор.", color=0x00ff09)
@@ -167,14 +167,14 @@ class Store(commands.Cog):
                     elif self.type == 'item':
                         if coin[1]['money'] >= self.money:
                             # выдаём предмет
+                            command = f'give {user} {self.arg}'
                             try:
                                 async with Client(config.rcon.host, config.rcon.port, config.rcon.password) as client:
-                                    command = f'give {user} {self.arg}'
-                                    response = await client.send_cmd(command, 20)
+                                    response = await client.send_cmd(command)
                                     print(response)
                             except aiomcrcon.RCONConnectionError:
                                 with open('temp.txt', 'a') as file:
-                                    file.write(command)
+                                    file.write(f'{command} \n')
                             # Вывод
                             db.remove_money(interaction.user.id, self.money)
                             embedVar = discord.Embed(title="Благодарим за поддержку!", description="Мы ценим ваш выбор.", color=0x00ff09)

@@ -246,7 +246,7 @@ class dbm:
     def check_promo(self, code):
         try:
             with self.connection.cursor() as cursor:
-                cursor.execute("""select id, enabled from `promo` where code = %s""", (code,))
+                cursor.execute("""select id, enabled, value from `promo` where code = %s""", (code,))
                 self.connection.commit()
                 res = cursor.fetchone()
             return [True, res if res is not None else {'enabled': 0}]
@@ -296,6 +296,16 @@ class dbm:
                 cursor.execute("""select permission from `luckperms_user_permissions` where uuid=%s""", (uuid,))
                 self.connection.commit()
             return [True, cursor.fetchone()]
+        except Exception as ex:
+            print(f'[SQL connector] {ex}')
+            return [None]
+        
+    def check_birthday(self, data):
+        try:
+            with self.connection.cursor() as cursor:
+                cursor.execute("""SELECT id FROM `users` WHERE DATE_FORMAT(birthday, '%%m%%d') = %s""", (data,))
+                self.connection.commit()
+            return cursor.fetchall()
         except Exception as ex:
             print(f'[SQL connector] {ex}')
             return [None]
