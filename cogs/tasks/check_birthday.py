@@ -11,7 +11,7 @@ class Birthday(commands.Cog):
         self.birthday.start()
 
     time = datetime.time(hour=1, minute=5, tzinfo=datetime.timezone.utc)
-    @tasks.loop(seconds=15)
+    @tasks.loop(time=time)
     async def birthday(self):
         if db.connect():
             try:
