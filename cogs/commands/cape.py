@@ -25,7 +25,7 @@ class Cape(commands.Cog):
                     if r_getUser[0]:
                         username = r_getUser[1]['username']
                         if await scstorage.savecape(username, file.url):
-                            uuid=db.check_uuid(username)[0]["uuid"]
+                            uuid=db.check_uuid(username)[1]["uuid"]
                             if await aiofiles.os.path.exists(f'{config.web.skindir}/{uuid}.png'):
                                 raw_skin = Image.open(f'{config.web.skindir}/{uuid}.png')
                             else:

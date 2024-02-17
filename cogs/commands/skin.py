@@ -25,7 +25,7 @@ class Skin(commands.Cog):
                     if r_getUser[0]:
                         username = r_getUser[1]['username']
                         if await scstorage.saveprofile(username, file.url):
-                            uuid=db.check_uuid(username)[0]["uuid"]
+                            uuid=db.check_uuid(username)[1]["uuid"]
                             skinDir = config.web.skindir
                             caprDir = config.web.capedir
                             if await aiofiles.os.path.exists(f'{caprDir}/{uuid}.png'):

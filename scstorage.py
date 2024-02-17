@@ -38,7 +38,7 @@ async def checkcape(caperaw):
 
 async def saveprofile(nickname, skinUrl):
         from main import db
-        uuid=db.check_uuid(nickname)[0]["uuid"]
+        uuid=db.check_uuid(nickname)[1]["uuid"]
         async with aiohttp.ClientSession() as session:
             async with session.get(skinUrl) as resp:
 
@@ -55,7 +55,7 @@ async def saveprofile(nickname, skinUrl):
                 
 async def savecape(nickname, capeUrl):
         from main import db
-        uuid=db.check_uuid(nickname)[0]["uuid"]
+        uuid=db.check_uuid(nickname)[1]["uuid"]
         async with aiohttp.ClientSession() as session:
             async with session.get(capeUrl) as resp:
 
