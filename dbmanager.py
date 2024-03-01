@@ -12,23 +12,26 @@ class dbm:
         self.username, self.password, self.host, self.db_name = username, password, host, db_name
 
     def connect(self):
-        self.connection = None
-        self.connection = pymysql.connect(
-            host=self.host,
-            port=3306,
-            user=self.username,
-            password=self.password,
-            database=self.db_name,
-            cursorclass=pymysql.cursors.DictCursor
-        )
-        return bool(self.connection)
+        try:
+            self.connection = None
+            self.connection = pymysql.connect(
+                host=self.host,
+                port=3306,
+                user=self.username,
+                password=self.password,
+                database=self.db_name,
+                cursorclass=pymysql.cursors.DictCursor
+            )
+            return bool(self.connection)
+        except Exception as ex:
+            print(f'[SQL connector]\x1B[31m {ex}\033[0m')
 
     def close(self):
         try:
             self.connection.close()
             return [True]
         except Exception as ex:
-            print(ex)
+            print(f'[SQL connector]\x1B[31m {ex}\033[0m')
             return [False, ex]
 
     def registered(self, discordID):
@@ -37,7 +40,7 @@ class dbm:
                 cursor.execute("""select username from `users` where id=%s""", (discordID,))
                 return [True, False if cursor.fetchone() is None else True]
         except Exception as ex:
-            print(f'[SQL connector] {ex}')
+            print(f'[SQL connector]\x1B[31m {ex}\033[0m')
             return [False, getError(ex)]
 
     def getUsernameByDiscordID(self, discordID):
@@ -46,7 +49,7 @@ class dbm:
                 cursor.execute("""SELECT username FROM `users` WHERE id = %s""", (discordID,))
                 return [True, cursor.fetchone()]
         except Exception as ex:
-            print(f'[SQL connector] {ex}')
+            print(f'[SQL connector]\x1B[31m {ex}\033[0m')
             return [False, getError(ex)]
 
     def register(self, discordID, username, password, birthday):
@@ -60,7 +63,7 @@ class dbm:
                 self.connection.commit()
             return [True]
         except Exception as ex:
-            print(f'[SQL connector] {ex}')
+            print(f'[SQL connector]\x1B[31m {ex}\033[0m')
             return [False, getError(ex)]
 
     def changePassword(self, discordID, password):
@@ -71,7 +74,7 @@ class dbm:
                 self.connection.commit()
                 return [True]
         except Exception as ex:
-            print(f'[SQL connector] {ex}')
+            print(f'[SQL connector]\x1B[31m {ex}\033[0m')
             return [False, getError(ex)]
 
     def changeUsername(self, discordID, username):
@@ -83,7 +86,7 @@ class dbm:
                 self.connection.commit()
                 return [True, name]
         except Exception as ex:
-            print(f'[SQL connector] {ex}')
+            print(f'[SQL connector]\x1B[31m {ex}\033[0m')
             return [False, getError(ex)]
 
     def save_pay(self, discordID, invoice_id):
@@ -93,7 +96,7 @@ class dbm:
                 self.connection.commit()
             return [True]
         except Exception as ex:
-            print(f'[SQL connector] {ex}')
+            print(f'[SQL connector]\x1B[31m {ex}\033[0m')
             return [False, getError(ex)]
 
     def check_pay(self, discordID):
@@ -103,7 +106,7 @@ class dbm:
                 self.connection.commit()
                 return [True, cursor.fetchone()]
         except Exception as ex:
-            print(f'[SQL connector] {ex}')
+            print(f'[SQL connector]\x1B[31m {ex}\033[0m')
             return [False, getError(ex)]
     
     def delete_pay(self, discordID):
@@ -114,7 +117,7 @@ class dbm:
                 self.connection.commit()
             return [True]
         except Exception as ex:
-            print(f'[SQL connector] {ex}')
+            print(f'[SQL connector]\x1B[31m {ex}\033[0m')
             return [False, getError(ex)]
 
     def check_money(self, discordID):
@@ -124,7 +127,7 @@ class dbm:
                 self.connection.commit()
             return [True, cursor.fetchone()]
         except Exception as ex:
-            print(f'[SQL connector] {ex}')
+            print(f'[SQL connector]\x1B[31m {ex}\033[0m')
             return [False, getError(ex)]
 
     def add_money(self, discordID, money):
@@ -134,7 +137,7 @@ class dbm:
                 self.connection.commit()
             return [True]
         except Exception as ex:
-            print(f'[SQL connector] {ex}')
+            print(f'[SQL connector]\x1B[31m {ex}\033[0m')
             return [False, getError(ex)]
 
     def add_money_username(self, username, money):
@@ -146,7 +149,7 @@ class dbm:
                 self.connection.commit()
             return [True]
         except Exception as ex:
-            print(f'[SQL connector] {ex}')
+            print(f'[SQL connector]\x1B[31m {ex}\033[0m')
             return [False, getError(ex)]
 
     def remove_money(self, discordID, money):
@@ -156,7 +159,7 @@ class dbm:
                 self.connection.commit()
             return [True]
         except Exception as ex:
-            print(f'[SQL connector] {ex}')
+            print(f'[SQL connector]\x1B[31m {ex}\033[0m')
             return [False, getError(ex)]
 
     def check_date(self, data):
@@ -166,7 +169,7 @@ class dbm:
                 self.connection.commit()
             return cursor.fetchall()
         except Exception as ex:
-            print(f'[SQL connector] {ex}')
+            print(f'[SQL connector]\x1B[31m {ex}\033[0m')
             return [None]
 
     def check_date_all(self):
@@ -176,7 +179,7 @@ class dbm:
                 self.connection.commit()
             return cursor.fetchall()
         except Exception as ex:
-            print(f'[SQL connector] {ex}')
+            print(f'[SQL connector]\x1B[31m {ex}\033[0m')
             return [None]
 
     def add_data(self, data, discordID):
@@ -186,7 +189,7 @@ class dbm:
                 self.connection.commit()
             return [True]
         except Exception as ex:
-            print(f'[SQL connector] {ex}')
+            print(f'[SQL connector]\x1B[31m {ex}\033[0m')
             return [False, getError(ex)]
 
     def remove_data(self, discordID):
@@ -196,7 +199,7 @@ class dbm:
                 self.connection.commit()
             return [True]
         except Exception as ex:
-            print(f'[SQL connector] {ex}')
+            print(f'[SQL connector]\x1B[31m {ex}\033[0m')
             return [False, getError(ex)]
 
     def unbane(self, discordID):
@@ -208,7 +211,7 @@ class dbm:
                 self.connection.commit()
             return [True]
         except Exception as ex:
-            print(f'[SQL connector] {ex}')
+            print(f'[SQL connector]\x1B[31m {ex}\033[0m')
             return [False, getError(ex)]
 
     def bane(self, discordID):
@@ -220,7 +223,7 @@ class dbm:
                 self.connection.commit()
             return [True]
         except Exception as ex:
-            print(f'[SQL connector] {ex}')
+            print(f'[SQL connector]\x1B[31m {ex}\033[0m')
             return [False, getError(ex)]
 
     def check_hwidId(self, discordID):
@@ -230,7 +233,7 @@ class dbm:
                 self.connection.commit()
             return cursor.fetchone()
         except Exception as ex:
-            print(f'[SQL connector] {ex}')
+            print(f'[SQL connector]\x1B[31m {ex}\033[0m')
             return [False, getError(ex)]
 
     def check_discordID_toInvoice_id(self, invoice_id):
@@ -240,7 +243,7 @@ class dbm:
                 self.connection.commit()
             return [True, cursor.fetchone()]
         except Exception as ex:
-            print(f'[SQL connector] {ex}')
+            print(f'[SQL connector]\x1B[31m {ex}\033[0m')
             return [False, getError(ex)]
 
     def check_promo(self, code):
@@ -251,7 +254,7 @@ class dbm:
                 res = cursor.fetchone()
             return [True, res if res is not None else {'enabled': 0}]
         except Exception as ex:
-            print(f'[SQL connector] {ex}')
+            print(f'[SQL connector]\x1B[31m {ex}\033[0m')
             return [False, getError(ex)]
 
     def add_use_promo(self, code):
@@ -261,7 +264,7 @@ class dbm:
                 self.connection.commit()
             return [True]
         except Exception as ex:
-            print(f'[SQL connector] {ex}')
+            print(f'[SQL connector]\x1B[31m {ex}\033[0m')
             return [False, getError(ex)]
         
     def check_uuid(self, nickname):
@@ -271,7 +274,7 @@ class dbm:
                 self.connection.commit()
             return [True, cursor.fetchone()]
         except Exception as ex:
-            print(f'[SQL connector] {ex}')
+            print(f'[SQL connector]\x1B[31m {ex}\033[0m')
             return [None]
         
     def check_banlist(self, page):
@@ -287,7 +290,7 @@ class dbm:
                 self.connection.commit()
             return cursor.fetchall()
         except Exception as ex:
-            print(f'[SQL connector] {ex}')
+            print(f'[SQL connector]\x1B[31m {ex}\033[0m')
             return [None]
         
     def check_game_role(self, uuid):
@@ -297,7 +300,7 @@ class dbm:
                 self.connection.commit()
             return [True, cursor.fetchone()]
         except Exception as ex:
-            print(f'[SQL connector] {ex}')
+            print(f'[SQL connector]\x1B[31m {ex}\033[0m')
             return [None]
         
     def check_birthday(self, data):
@@ -307,5 +310,5 @@ class dbm:
                 self.connection.commit()
             return cursor.fetchall()
         except Exception as ex:
-            print(f'[SQL connector] {ex}')
+            print(f'[SQL connector]\x1B[31m {ex}\033[0m')
             return [None]

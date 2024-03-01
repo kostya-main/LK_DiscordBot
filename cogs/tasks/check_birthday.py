@@ -1,5 +1,4 @@
 import discord
-import aiomcrcon
 import datetime
 from discord.ext import commands, tasks
 
@@ -17,7 +16,6 @@ class Birthday(commands.Cog):
             try:
                 for Did in db.check_birthday(datetime.date.today().strftime('%m%d')):
                     user = await self.client.fetch_user(Did['id'])
-
                     embedVar = discord.Embed(title=f"С праздником вас {user.name}!!!", description="Мы рады что вы вместе с нами будем праздновать такой великолепный день. В честь этого мы дарим на ваш баланс 100$ надеемся вас это сильно парадует и вы дальше будем радовать вас удивительными мирами.", color=config.bot.embedColor)
                     db.add_money(Did['id'], 100)
                     await user.send(embed=embedVar)

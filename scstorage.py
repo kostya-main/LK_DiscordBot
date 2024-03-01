@@ -9,14 +9,13 @@ import uvicorn
 import hashlib
 import aiofiles.os
 import time
-import io
 
 from main import config, shop
 
 
 
 async def checkskin(skinraw):
-    skin = Image.open(io.BytesIO(skinraw))
+    skin = Image.open(BytesIO(skinraw))
     w, h = skin.size
     return (w % 64 == 0 and h % 64 == 0) and (w <= 512 and h <= 512)
 
@@ -32,7 +31,7 @@ async def checkslim(skinraw):
 
 
 async def checkcape(caperaw):
-    skin = Image.open(io.BytesIO(caperaw))
+    skin = Image.open(BytesIO(caperaw))
     w, h = skin.size
     return (w % 64 == 0 and h % 32 == 0) and (w <= 512 and h <= 512)
 
