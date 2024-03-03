@@ -50,8 +50,8 @@ class Reg(commands.Cog):
                         birthday = None
                     r_reg = db.register(interaction.user.id, login, password, birthday)
                     r_promo = db.check_promo(promoCode)
-                    command = f"scoreboard players set {login} promo {r_promo[1]['id']}"
                     if r_promo[1]['enabled'] == 1:
+                        command = f"scoreboard players set {login} promo {r_promo[1]['id']}"
                         try:
                             async with Client(config.rcon.host, config.rcon.port, config.rcon.password) as client:
                                 response = await client.send_cmd(command)
