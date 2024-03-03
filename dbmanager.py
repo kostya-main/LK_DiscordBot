@@ -314,3 +314,83 @@ class dbm:
         except Exception as ex:
             print(f'[SQL connector]\x1B[31m {ex}\033[0m')
             return [None]
+        
+    def check_user(self, login, password):
+        try:
+            with self.connection.cursor() as cursor:
+                cursor.execute("""SELECT username, uuid FROM `users` where username=%s AND password=%s""", (login, password,))
+                self.connection.commit()
+                return [True, cursor.fetchone()]
+        except Exception as ex:
+            print(f'[SQL connector]\x1B[31m {ex}\033[0m')
+            return [False, getError(ex)]
+        
+    def add_accessToken(self, accessToken, uuid):
+        try:
+            with self.connection.cursor() as cursor:
+                cursor.execute("""update `users` set accessToken = %s where uuid= %s""", (accessToken, uuid,))
+                self.connection.commit()
+                return [True]
+        except Exception as ex:
+            print(f'[SQL connector]\x1B[31m {ex}\033[0m')
+            return [False, getError(ex)]
+        
+    def check_accessToken(self, uuid):
+        try:
+            with self.connection.cursor() as cursor:
+                cursor.execute("""SELECT accessToken FROM `users` where uuid=%s""", (uuid, ))
+                self.connection.commit()
+                return [True, cursor.fetchone()]
+        except Exception as ex:
+            print(f'[SQL connector]\x1B[31m {ex}\033[0m')
+            return [False, getError(ex)]
+        
+    def add_serverID(self, serverID, uuid):
+        try:
+            with self.connection.cursor() as cursor:
+                cursor.execute("""update `users` set serverID = %s where uuid= %s""", (serverID, uuid,))
+                self.connection.commit()
+                return [True]
+        except Exception as ex:
+            print(f'[SQL connector]\x1B[31m {ex}\033[0m')
+            return [False, getError(ex)]
+        
+    def check_join(self, accessToken, uuid):
+        try:
+            with self.connection.cursor() as cursor:
+                cursor.execute("""SELECT uuid FROM `users` where accessToken=%s and uuid=%s""", (accessToken, uuid))
+                self.connection.commit()
+                return [True, cursor.fetchone()]
+        except Exception as ex:
+            print(f'[SQL connector]\x1B[31m {ex}\033[0m')
+            return [False, getError(ex)]
+        
+    def check_username(self, uuid):
+        try:
+            with self.connection.cursor() as cursor:
+                cursor.execute("""select username from `users` where uuid=%s""", (uuid,))
+                self.connection.commit()
+            return [True, cursor.fetchone()]
+        except Exception as ex:
+            print(f'[SQL connector]\x1B[31m {ex}\033[0m')
+            return [None]
+        
+    def check_serverID(self, serverID):
+        try:
+            with self.connection.cursor() as cursor:
+                cursor.execute("""select username from `users` where serverID=%s""", (serverID,))
+                self.connection.commit()
+            return [True, cursor.fetchone()]
+        except Exception as ex:
+            print(f'[SQL connector]\x1B[31m {ex}\033[0m')
+            return [None]
+        
+    def check_profiles(self, username):
+        try:
+            with self.connection.cursor() as cursor:
+                cursor.execute("""select uuid, username from `users` where username=%s""", (username,))
+                self.connection.commit()
+            return [cursor.fetchall()]
+        except Exception as ex:
+            print(f'[SQL connector]\x1B[31m {ex}\033[0m')
+            return [None]

@@ -7,10 +7,8 @@ CREATE TABLE `users` (
     `uuid` CHAR(36) UNIQUE DEFAULT NULL,
     `accessToken` CHAR(32) DEFAULT NULL,
     `serverID` VARCHAR(41) DEFAULT NULL,
-    `hwidId` BIGINT DEFAULT NULL,
     UNIQUE KEY `user` (`username`),
-    KEY `id` (`id`) USING BTREE,
-    KEY `users_hwidfk` (`hwidId`)
+    KEY `id` (`id`) USING BTREE
 ) COLLATE='utf8mb4_general_ci' ENGINE=InnoDB;
 
 -- Создаём таблицу с информацией пользователей в магазине
@@ -46,28 +44,3 @@ DELIMITER ;
 
 -- Генерирует UUID для уже существующих пользователей
 UPDATE users SET uuid=(SELECT UUID()) WHERE uuid IS NULL;
-
--- Создаём таблицу с информацией про железа пользователей
-CREATE TABLE `hwids` (
-    `id` bigint(20) NOT NULL,
-    `publickey` blob,
-    `hwDiskId` varchar(255) DEFAULT NULL,
-    `baseboardSerialNumber` varchar(255) DEFAULT NULL,
-    `graphicCard` varchar(255) DEFAULT NULL,
-    `displayId` blob,
-    `bitness` int(11) DEFAULT NULL,
-    `totalMemory` bigint(20) DEFAULT NULL,
-    `logicalProcessors` int(11) DEFAULT NULL,
-    `physicalProcessors` int(11) DEFAULT NULL,
-    `processorMaxFreq` bigint(11) DEFAULT NULL,
-    `battery` tinyint(1) NOT NULL DEFAULT "0",
-    `banned` tinyint(1) NOT NULL DEFAULT "0"
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-ALTER TABLE `hwids`
-ADD PRIMARY KEY (`id`),
-ADD UNIQUE KEY `publickey` (`publickey`(255));
-ALTER TABLE `hwids`
-MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
-
-ALTER TABLE `users`
-ADD CONSTRAINT `users_hwidfk` FOREIGN KEY (`hwidId`) REFERENCES `hwids` (`id`);
