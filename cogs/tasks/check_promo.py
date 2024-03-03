@@ -39,12 +39,10 @@ class Check(commands.Cog):
                     user = await self.client.fetch_user(Did['id'])
                     await user.send('Ваш пробный период кончился!!! Пожалуйста купите подписку.')
                 #Проверка 3 дня до бана
-                check_notification = db.check_date_all()
-                data_check = datetime.date.today() + datetime.timedelta(days=3)
+                check_notification = db.check_date_3day()
                 for Noti in check_notification:
-                    if Noti['data_trial'] == data_check:
-                        user = await client.fetch_user(Noti['id'])
-                        await user.send('Через 3 дня у вас кончится подписка. Продлите её в ближайшее время!')
+                    user = await self.client.fetch_user(Noti['id'])
+                    await user.send('Через 3 дня у вас кончится подписка. Продлите её в ближайшее время!')
             except Exception as ex:
                 print(ex)
             finally:

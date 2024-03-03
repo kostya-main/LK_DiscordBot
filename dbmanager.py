@@ -172,10 +172,12 @@ class dbm:
             print(f'[SQL connector]\x1B[31m {ex}\033[0m')
             return [None]
 
-    def check_date_all(self):
+    def check_date_3day(self):
         try:
+            data = datetime.date.today().strftime('%m%d')
+            day3 = datetime.date.today() + datetime.timedelta(days=3)
             with self.connection.cursor() as cursor:
-                cursor.execute('select id, data_trial from `store`')
+                cursor.execute("""SELECT id FROM `store` WHERE DATE_FORMAT(data_trial,'%%m%%d') >= %s AND DATE_FORMAT(data_trial,'%%m%%d') <= %s""", (data, day3.strftime('%m%d')))
                 self.connection.commit()
             return cursor.fetchall()
         except Exception as ex:
