@@ -67,7 +67,7 @@ async def savecape(nickname, capeUrl):
 
 
 
-app = FastAPI(docs_url='/docs', redoc_url='/redoc')
+app = FastAPI(docs_url=None, redoc_url=None)
 app.add_middleware(CORSMiddleware, allow_origins=["*"])
 class API:
 
