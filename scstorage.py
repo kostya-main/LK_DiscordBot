@@ -223,7 +223,6 @@ class API:
     async def authorization(reqest:Profile):
         if db.connect():
             username = db.check_username(reqest.userUUID)
-            print(username, reqest.userUUID)
             if username[1] != None:
                 linkSkin = f'{config.web.skindir}/{reqest.userUUID}.png'
                 if await aiofiles.os.path.exists(linkSkin):
