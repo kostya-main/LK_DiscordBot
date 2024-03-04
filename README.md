@@ -40,7 +40,7 @@ python main.py
 
 ### База данных
 
-Все нужные для работы таблицы описанные в файле [bdCreate.sql](https://github.com/kostya-main/LK_DiscordBot/blob/aurora-launcher/bdCreate.sql) (Включая и те которые нужны GravitLauncher)
+Все нужные для работы таблицы описанные в файле [bdCreate.sql](https://github.com/kostya-main/LK_DiscordBot/blob/aurora-launcher/bdCreate.sql) (Включая и те которые нужны AuroraLauncher)
 
 ### Настройка Nginx
 
