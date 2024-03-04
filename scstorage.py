@@ -235,7 +235,7 @@ class API:
                         "username": username[1]['username'],
                         "isAlex": slim_type,
                         "skinUrl": f'{config.web.url}/storage/skin?uuid={reqest.userUUID}',
-                        "capeUrl": f'{config.web.url}/storage/skin?uuid={reqest.userUUID}'
+                        "capeUrl": f'{config.web.url}/storage/cape?uuid={reqest.userUUID}'
                     }
                 }
             return {
