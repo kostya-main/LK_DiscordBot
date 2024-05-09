@@ -123,25 +123,25 @@ class API:
     async def storage(uuid:str):
         link = f'{config.web.skindir}/{uuid}.png'
         if await aiofiles.os.path.exists(link):
-            return FileResponse(link)
+            return FileResponse(link, headers={"Cache-Control" : "no-store"})
         else:
-            return FileResponse(config.web.defaultSkin)
+            return FileResponse(config.web.defaultSkin, headers={"Cache-Control" : "no-store"})
         
     @app.get('/storage/cape')
     async def storage(uuid:str):
         link = f'{config.web.capedir}/{uuid}.png'
         if await aiofiles.os.path.exists(link):
-            return FileResponse(link)
+            return FileResponse(link, headers={"Cache-Control" : "no-store"})
         else:
-            return FileResponse(config.web.defaultCape)
+            return FileResponse(config.web.defaultCape, headers={"Cache-Control" : "no-store"})
         
     @app.get('/storage/avatar')
     async def storage(uuid:str):
         link = f'{config.web.avatardir}/{uuid}.png'
         if await aiofiles.os.path.exists(link):
-            return FileResponse(link)
+            return FileResponse(link, headers={"Cache-Control" : "no-store"})
         else:
-            return FileResponse(config.web.defaultAvatar)
+            return FileResponse(config.web.defaultAvatar, headers={"Cache-Control" : "no-store"})
         
     @app.head('/storage/skin')
     async def head(nickname:str, response:Response):
