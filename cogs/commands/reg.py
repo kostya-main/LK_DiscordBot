@@ -1,3 +1,4 @@
+import re
 import discord
 import aiomcrcon
 from discord.ext import commands
@@ -27,7 +28,7 @@ class Reg(commands.Cog):
         def __init__(self):
             super().__init__(timeout=None)
             
-        login = discord.ui.TextInput(label="Игровой логин",placeholder="Логин", style=discord.TextStyle.short, required=True, min_length=5, max_length=20)
+        login = discord.ui.TextInput(label="Игровой логин",placeholder="Логин", style=discord.TextStyle.short, required=True, min_length=4, max_length=16)
         password = discord.ui.TextInput(label="Уникальный пароль",placeholder="Пароль", style=discord.TextStyle.short, required=True, min_length=5, max_length=20)
         if config.bot.event_birthday==True:
             birthday = discord.ui.TextInput(label="Дата твоего рождения",placeholder="2015-12-31", style=discord.TextStyle.short, required=True, min_length=8, max_length=10)
@@ -48,6 +49,9 @@ class Reg(commands.Cog):
                             return
                     else:
                         birthday = None
+                    if re.fullmatch(r'[a-z0-9_-]{4,16}', login) == None:
+                        await interaction.response.send_message('В вашем нике использует не корректные символы!')
+                        return
                     r_reg = db.register(interaction.user.id, login, password, birthday)
                     r_promo = db.check_promo(promoCode)
                     if r_promo[1]['enabled'] == 1:
