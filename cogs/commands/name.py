@@ -1,4 +1,5 @@
 import discord
+import re
 from discord.ext import commands
 from discord import app_commands
 
@@ -11,11 +12,14 @@ class Name(commands.Cog):
     @app_commands.command(name="name", description="Изменить псевдоним")
     @app_commands.describe(nickname = "Введите новый псевдоним")
     @app_commands.default_permissions(permissions=0)
-    async def name(self, interaction: discord.Integration, nickname:app_commands.Range[str, 5, None]):
+    async def name(self, interaction: discord.Integration, nickname:app_commands.Range[str, 4, 16]):
         if db.connect():
             try:
                 r = db.registered(interaction.user.id)
                 if r[0] and r[1]:
+                    if re.fullmatch(r'[a-z0-9_-]{4,16}', nickname) == None:
+                        await interaction.response.send_message('В вашем нике использует не корректные символы!')
+                        return
                     r_chpass = db.changeUsername(interaction.user.id, nickname)
                     if r_chpass[0]:
                         await interaction.response.send_message('Псевдоним успешно изменён')
