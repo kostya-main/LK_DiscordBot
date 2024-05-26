@@ -30,16 +30,20 @@ class Cape(commands.Cog):
                                 raw_skin = Image.open(f'{config.web.skindir}/{uuid}.png')
                             else:
                                 raw_skin = Image.open(config.web.defaultSkin)
+                            w, h = raw_skin.size
                             embedVar = discord.Embed(title="Успешно!", description="Ваш плащ стал таким.", color=0x00ff09)
                             #Создание 3D модели
-                            s = minepi.Skin(raw_skin=raw_skin, raw_cape=Image.open(f'{config.web.capedir}/{uuid}.png'))
-                            io = BytesIO()
-                            images = await s.render_skin(hr=180, vrc=0)
-                            images.save(io, 'PNG')
-                            io.seek(0)
-                            im = discord.File(io, 'skin.png')
-                            embedVar.set_image(url='attachment://skin.png')
-                            await interaction.response.send_message(embed=embedVar, file=im)
+                            if w <= 64 and h <= 64:
+                                s = minepi.Skin(raw_skin=raw_skin, raw_cape=Image.open(f'{config.web.capedir}/{uuid}.png'))
+                                io = BytesIO()
+                                images = await s.render_skin(hr=180, vrc=0)
+                                images.save(io, 'PNG')
+                                io.seek(0)
+                                im = discord.File(io, 'skin.png')
+                                embedVar.set_image(url='attachment://skin.png')
+                                await interaction.response.send_message(embed=embedVar, file=im)
+                            else:
+                                await interaction.response.send_message(embed=embedVar)
                         else:
                             await interaction.response.send_message('**Ошибка:** Неверный файл плаща')
                 else:

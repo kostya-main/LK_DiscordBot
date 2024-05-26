@@ -32,16 +32,21 @@ class Skin(commands.Cog):
                                 raw_cape = Image.open(f'{caprDir}/{uuid}.png')
                             else:
                                 raw_cape = Image.open(config.web.defaultCape)
+                            raw_skin = Image.open(f'{skinDir}/{uuid}.png')
+                            w, h = raw_skin.size
                             embedVar = discord.Embed(title="Успешно!", description="Ваш скин стал таким.", color=0x00ff09)
                             #Создание 3D модели
-                            s = minepi.Skin(raw_skin=Image.open(f'{skinDir}/{uuid}.png'), raw_cape=raw_cape)
-                            io = BytesIO()
-                            images = await s.render_skin(aa=True, hr=40, vr=-25, vrla=-40, vrra=40, vrll=40, vrrl=-40)
-                            images.save(io, 'PNG')
-                            io.seek(0)
-                            im = discord.File(io, 'skin.png')
-                            embedVar.set_image(url='attachment://skin.png')
-                            await interaction.response.send_message(embed=embedVar, file=im)
+                            if w <= 64 and h <= 64:
+                                s = minepi.Skin(raw_skin=raw_skin, raw_cape=raw_cape)
+                                io = BytesIO()
+                                images = await s.render_skin(aa=True, hr=40, vr=-25, vrla=-40, vrra=40, vrll=40, vrrl=-40)
+                                images.save(io, 'PNG')
+                                io.seek(0)
+                                im = discord.File(io, 'skin.png')
+                                embedVar.set_image(url='attachment://skin.png')
+                                await interaction.response.send_message(embed=embedVar, file=im)
+                            else:
+                                await interaction.response.send_message(embed=embedVar)
                         else:
                             await interaction.response.send_message('**Ошибка:** Неверный файл скина')
                 else:
