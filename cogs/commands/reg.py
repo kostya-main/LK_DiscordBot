@@ -49,8 +49,8 @@ class Reg(commands.Cog):
                             return
                     else:
                         birthday = None
-                    if re.fullmatch(r'[a-z0-9_-]{4,16}', login) == None:
-                        await interaction.response.send_message('В вашем нике использует не корректные символы!')
+                    if re.fullmatch(r'[a-z0-9_-]{4,16}', login, re.IGNORECASE) == None:
+                        await interaction.response.send_message('В вашем нике использует некорректные символы!')
                         return
                     r_reg = db.register(interaction.user.id, login, password, birthday)
                     r_promo = db.check_promo(promoCode)

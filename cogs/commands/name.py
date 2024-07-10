@@ -17,8 +17,8 @@ class Name(commands.Cog):
             try:
                 r = db.registered(interaction.user.id)
                 if r[0] and r[1]:
-                    if re.fullmatch(r'[a-z0-9_-]{4,16}', nickname) == None:
-                        await interaction.response.send_message('В вашем нике использует не корректные символы!')
+                    if re.fullmatch(r"[a-z0-9_-]{4,16}", nickname, re.IGNORECASE) == None:
+                        await interaction.response.send_message('В вашем нике использует некорректные символы!')
                         return
                     r_chpass = db.changeUsername(interaction.user.id, nickname)
                     if r_chpass[0]:
