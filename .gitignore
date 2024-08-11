@@ -1,8 +1,5 @@
 /cogs/commands/test.py
-/cogs/commands/__pycache__
-/cogs/event/__pycache__
-/cogs/tasks/__pycache__
-/__pycache__
+__pycache__
 /temp.txt
 /avatar
 /capes

@@ -4,12 +4,15 @@ bot:
   embedColor: 0x8c4bc9
   guild: ID Discord сервера
   adminRole: ID Роли для выполнение команд администрирования
-  event_birthday: true #Нужен ли вам функции связанные в датой рождения
+  event_birthday: true #Нужны ли вам функции связанные в датой рождения
 db:
   host: localhost
   login: root
   password: password
   database: bot
+server_ping:
+  enabled: true
+  ipServer: localhost:25565 #Поддерживаются домены с SRV записью
 rcon:
   host: localhost
   port: 25575

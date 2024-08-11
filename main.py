@@ -12,7 +12,7 @@ import dbmanager
 config = Dynaconf(settings_files='conf/settings.yaml',apply_default_on_none=True, secrets='.secrets.yaml')
 shop = Dynaconf(settings_files='conf/shop.yaml', apply_default_on_none=True, secrets='.secrets.yaml')
 client = commands.Bot(command_prefix=config.bot.prefix, intents=discord.Intents.all(), help_command=None)
-db = dbmanager.dbm(config.db.login, config.db.password, config.db.host, config.db.database)
+db = dbmanager.dbm(str(config.db.login), str(config.db.password), config.db.host, config.db.database)
 
 
 @client.event
@@ -39,6 +39,7 @@ async def on_ready():
 def signal_handler(signal, frame):
     print('\nStopping!')
     scs_thread.terminate()
+    client.loop.stop()
     sys.exit(0)
 
 if __name__ == '__main__':
