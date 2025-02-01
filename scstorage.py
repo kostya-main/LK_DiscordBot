@@ -67,7 +67,7 @@ async def savecape(nickname, capeUrl):
 
 
 
-app = FastAPI(docs_url=None, redoc_url=None)
+app = FastAPI(docs_url="/docs", redoc_url=None)
 app.add_middleware(CORSMiddleware, allow_origins=["*"])
 class API:
 
@@ -119,7 +119,7 @@ class API:
         response = status.HTTP_200_OK
         return response
     
-    @app.get('/storage/skin')
+    @app.get('/storage/skin/{uuid}')
     async def storage(uuid:str):
         link = f'{config.web.skindir}/{uuid}.png'
         if await aiofiles.os.path.exists(link):
@@ -127,7 +127,7 @@ class API:
         else:
             return FileResponse(config.web.defaultSkin, headers={"Cache-Control" : "no-store"})
         
-    @app.get('/storage/cape')
+    @app.get('/storage/cape/{uuid}')
     async def storage(uuid:str):
         link = f'{config.web.capedir}/{uuid}.png'
         if await aiofiles.os.path.exists(link):
@@ -135,7 +135,7 @@ class API:
         else:
             return FileResponse(config.web.defaultCape, headers={"Cache-Control" : "no-store"})
         
-    @app.get('/storage/avatar')
+    @app.get('/storage/avatar/{uuid}')
     async def storage(uuid:str):
         link = f'{config.web.avatardir}/{uuid}.png'
         if await aiofiles.os.path.exists(link):
@@ -168,8 +168,8 @@ class API:
                     "userUUID": user[1]["uuid"],
                     "accessToken": accessToken,
                     "isAlex": slim_type,
-                    "skinUrl": f'{config.web.url}/storage/skin?uuid={user[1]["uuid"]}',
-                    "capeUrl": f'{config.web.url}/storage/cape?uuid={user[1]["uuid"]}'
+                    "skinUrl": f'{config.web.url}/storage/skin/{user[1]["uuid"]}',
+                    "capeUrl": f'{config.web.url}/storage/cape/{user[1]["uuid"]}'
                 }
                 }
             return {
@@ -209,8 +209,8 @@ class API:
                     "result": {
                         "userUUID": user[1]["uuid"],
                         "isAlex": slim_type,
-                        "skinUrl": f'{config.web.url}/storage/skin?uuid={user[1]["uuid"]}',
-                        "capeUrl": f'{config.web.url}/storage/cape?uuid={user[1]["uuid"]}'
+                        "skinUrl": f'{config.web.url}/storage/skin/{user[1]["uuid"]}',
+                        "capeUrl": f'{config.web.url}/storage/cape/{user[1]["uuid"]}'
                     }
                 }
             return {
@@ -234,8 +234,8 @@ class API:
                     "result": {
                         "username": username[1]['username'],
                         "isAlex": slim_type,
-                        "skinUrl": f'{config.web.url}/storage/skin?uuid={reqest.userUUID}',
-                        "capeUrl": f'{config.web.url}/storage/cape?uuid={reqest.userUUID}'
+                        "skinUrl": f'{config.web.url}/storage/skin/{reqest.userUUID}',
+                        "capeUrl": f'{config.web.url}/storage/cape/{reqest.userUUID}'
                     }
                 }
             return {
